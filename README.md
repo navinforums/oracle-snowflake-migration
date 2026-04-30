@@ -1,4 +1,4 @@
-# oracle-snowflake-migration
+docs: add project instructions to README
 
 oracle-snowflake-migration/
 ├── airflow/
