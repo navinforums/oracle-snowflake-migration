@@ -170,73 +170,50 @@ GRANT SELECT ON FUTURE TABLES
 -- -------------------------------------------------------------
 -- SECTION 6: Stage grants
 -- -------------------------------------------------------------
-
-GRANT ALL PRIVILEGES ON ALL STAGES
+-- Snowpipe role — full stage access (READ + WRITE)
+GRANT READ, WRITE ON ALL STAGES
     IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE DEV_SNOWPIPE_ROLE;
-GRANT ALL PRIVILEGES ON FUTURE STAGES
+GRANT READ, WRITE ON FUTURE STAGES
     IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE DEV_SNOWPIPE_ROLE;
 
-GRANT ALL PRIVILEGES ON ALL STAGES
+-- Data engineer — full stage access
+GRANT READ, WRITE ON ALL STAGES
     IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE EBS_DEV_DATA_ENGINEER_ROLE;
-GRANT ALL PRIVILEGES ON FUTURE STAGES
+GRANT READ, WRITE ON FUTURE STAGES
     IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE EBS_DEV_DATA_ENGINEER_ROLE;
 
-GRANT READ, OPERATE ON ALL STAGES
+-- Airflow — READ only on stage
+GRANT READ ON ALL STAGES
     IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE DEV_AIRFLOW_ROLE;
-GRANT READ, OPERATE ON FUTURE STAGES
+GRANT READ ON FUTURE STAGES
     IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE DEV_AIRFLOW_ROLE;
 
 -- -------------------------------------------------------------
 -- SECTION 7: Pipe grants
+-- Pipe grants are handled at pipe creation time
+-- not at foundation setup level
+-- Reason: Snowflake restricts bulk grants on pipes
+--         Least privilege — grant per pipe when created
+-- See: snowflake/sql/bronze/ingestion_pipes.sql
 -- -------------------------------------------------------------
-
-GRANT OPERATE, ALTER ON ALL PIPES
-    IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE DEV_AIRFLOW_ROLE;
-GRANT OPERATE, ALTER ON FUTURE PIPES
-    IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE DEV_AIRFLOW_ROLE;
-
-GRANT ALL PRIVILEGES ON ALL PIPES
-    IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE DEV_SNOWPIPE_ROLE;
-GRANT ALL PRIVILEGES ON FUTURE PIPES
-    IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE DEV_SNOWPIPE_ROLE;
 
 -- -------------------------------------------------------------
 -- SECTION 8: Stream grants
+-- Stream grants are handled at stream creation time
+-- not at foundation setup level
+-- Reason: Snowflake restricts bulk grants on streams
+--         Least privilege — grant per stream when created
+-- See: snowflake/sql/bronze/cdc_streams.sql
 -- -------------------------------------------------------------
-
-GRANT SELECT, OPERATE ON ALL STREAMS
-    IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE DEV_AIRFLOW_ROLE;
-GRANT SELECT, OPERATE ON FUTURE STREAMS
-    IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE DEV_AIRFLOW_ROLE;
-
-GRANT SELECT, OPERATE ON ALL STREAMS
-    IN SCHEMA DEV_DB.EBS_SILVER TO ROLE DEV_AIRFLOW_ROLE;
-GRANT SELECT, OPERATE ON FUTURE STREAMS
-    IN SCHEMA DEV_DB.EBS_SILVER TO ROLE DEV_AIRFLOW_ROLE;
-
-GRANT ALL PRIVILEGES ON ALL STREAMS
-    IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE EBS_DEV_DATA_ENGINEER_ROLE;
-GRANT ALL PRIVILEGES ON FUTURE STREAMS
-    IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE EBS_DEV_DATA_ENGINEER_ROLE;
 
 -- -------------------------------------------------------------
 -- SECTION 9: Task grants
+-- Task grants are handled at task creation time
+-- not at foundation setup level
+-- Reason: Snowflake restricts bulk grants on tasks
+--         Least privilege — grant per task when created
+-- See: snowflake/sql/bronze/cdc_tasks.sql
 -- -------------------------------------------------------------
-
-GRANT OPERATE, EXECUTE TASK ON ALL TASKS
-    IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE DEV_AIRFLOW_ROLE;
-GRANT OPERATE, EXECUTE TASK ON FUTURE TASKS
-    IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE DEV_AIRFLOW_ROLE;
-
-GRANT OPERATE, EXECUTE TASK ON ALL TASKS
-    IN SCHEMA DEV_DB.EBS_SILVER TO ROLE DEV_AIRFLOW_ROLE;
-GRANT OPERATE, EXECUTE TASK ON FUTURE TASKS
-    IN SCHEMA DEV_DB.EBS_SILVER TO ROLE DEV_AIRFLOW_ROLE;
-
-GRANT ALL PRIVILEGES ON ALL TASKS
-    IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE EBS_DEV_DATA_ENGINEER_ROLE;
-GRANT ALL PRIVILEGES ON FUTURE TASKS
-    IN SCHEMA DEV_DB.EBS_BRONZE TO ROLE EBS_DEV_DATA_ENGINEER_ROLE;
 
 -- -------------------------------------------------------------
 -- VERIFICATION
